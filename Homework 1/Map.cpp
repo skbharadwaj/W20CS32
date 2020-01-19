@@ -14,8 +14,8 @@ using namespace std;
 		return m_s;
 	}
 	bool Map::inMap(const KeyType& key) const {
-		for(int i = 0;i < m_s;i++) 
-            if(pairs[i].k == key) return true;
+	        for(int i = 0;i < m_s;i++) 
+            		if(pairs[i].k == key) return true;
 		return false;
 	}
 	bool Map::insert(const KeyType& key, const ValueType& value) {
