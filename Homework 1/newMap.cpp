@@ -25,7 +25,7 @@ using namespace std;
         delete [] pairs;
     }
     void Map::operator=(const Map& other) {
-		// delete [] this->pairs;
+		delete [] this->pairs;
 		m_s = other.m_s;
 		m_c = other.m_c;
         pairs = new KVPair[m_s];
