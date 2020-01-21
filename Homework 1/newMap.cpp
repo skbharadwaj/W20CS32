@@ -14,21 +14,23 @@ using namespace std;
         m_s = sizeOfMap;
         m_c = 0;
     }
-    Map::Map(Map& other) {
+    Map::Map(const Map& other) {
+		m_s = other.m_s;
+		m_c = other.m_c;
         pairs = new KVPair[other.m_s];
-        memcpy(&pairs,&other.pairs,sizeof(other.pairs));
-        m_s = other.m_s;
-        m_c = other.m_c;
+        for(int i = 0;i < m_s;i++)
+			pairs[i] = other.pairs[i];
     }
     Map::~Map() {
         delete [] pairs;
     }
     void Map::operator=(const Map& other) {
-        delete [] pairs;
-        pairs = new KVPair[other.m_s];
-        memcpy(&pairs,&other.pairs,sizeof(other.pairs));
-        m_s = other.m_s;
-        m_c = other.m_c;          
+		// delete [] this->pairs;
+		m_s = other.m_s;
+		m_c = other.m_c;
+        pairs = new KVPair[m_s];
+        for(int i = 0;i < m_s;i++)
+			pairs[i] = other.pairs[i];      
     }
 	bool Map::empty() const {
 		return m_c == 0;
@@ -93,7 +95,7 @@ using namespace std;
 		return true;
 	}
 	void Map::swap(Map& other) {
-        KVPair *temp = this->pairs;
+        KVPair *temp = pairs;
         this->pairs = other.pairs;
         other.pairs = temp;
         int tempSize = this->m_s;

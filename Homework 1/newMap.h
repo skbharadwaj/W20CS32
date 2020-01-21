@@ -15,7 +15,7 @@ class Map {
 		static const int DEFAULT_MAX_ITEMS = 240; 
 		Map();
         Map(int sizeOfMap);
-        Map(Map& other);
+        Map(const Map& other);
         ~Map();
 		bool empty() const;
 		int size() const;

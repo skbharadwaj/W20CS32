@@ -4,9 +4,6 @@
 #include <cstdlib>
 using namespace std;
 	CarMap::CarMap() {}
-	CarMap::CarMap(CarMap& other) {
-		memcpy(&m_map, &other.m_map, sizeof(other.m_map));
-	}
 	bool CarMap::addCar(string license) {
 		return m_map.insert(license, 0);
 	}
@@ -31,9 +28,6 @@ using namespace std;
 			m_map.get(i,k,v);
 			cout << k << " " << v << endl;
 		}
-	}
-	void CarMap::operator=(const CarMap& other) {
-		memcpy(&m_map, &other.m_map, sizeof(other.m_map));
 	}
 
 
