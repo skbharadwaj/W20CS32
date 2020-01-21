@@ -73,7 +73,7 @@ using namespace std;
 		for(int i = 0;i < m_s;i++) {
 			temp = pairs[i];
 			pairs[i] = other.pairs[i];
-			pairs[i] = temp;
+			other.pairs[i] = temp;
 		}
 		int tempSize = other.m_s;
 		other.m_s = this->m_s;
