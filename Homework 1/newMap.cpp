@@ -5,15 +5,15 @@
 using namespace std;
 
 	Map::Map() {
-        pairs = new KVPair[DEFAULT_MAX_ITEMS];
+        	pairs = new KVPair[DEFAULT_MAX_ITEMS];
 		m_s = DEFAULT_MAX_ITEMS;
-        m_c = 0;
+       		m_c = 0;
 	}
-    Map::Map(int sizeOfMap) {
-        pairs = new KVPair[sizeOfMap];
-        m_s = sizeOfMap;
-        m_c = 0;
-    }
+	Map::Map(int sizeOfMap) {
+     		pairs = new KVPair[sizeOfMap];
+        	m_s = sizeOfMap;
+        	m_c = 0;
+	}
     Map::Map(const Map& other) {
 		m_s = other.m_s;
 		m_c = other.m_c;
