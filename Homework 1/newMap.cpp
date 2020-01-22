@@ -10,6 +10,10 @@ using namespace std;
        		m_c = 0;
 	}
 	Map::Map(int sizeOfMap) {
+		if(sizeOfMap < 0) {
+			cout << "Negative size of array" << endl;
+			exit(1);	
+		}
      		pairs = new KVPair[sizeOfMap];
         	m_s = sizeOfMap;
         	m_c = 0;

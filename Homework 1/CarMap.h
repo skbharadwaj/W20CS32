@@ -1,6 +1,6 @@
 #ifndef CARMAP_H
 #define CARMAP_H
-#include "newMap.h"
+#include "Map.h"
 using namespace std;
 
 class CarMap {
