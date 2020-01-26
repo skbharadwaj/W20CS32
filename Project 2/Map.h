@@ -13,7 +13,7 @@ class Map {
 	public:
 		Map();
 		~Map();
-		Map(Map& other);
+		Map(const Map& other);
 		Map& operator=(const Map& other);
 		bool empty() const;
 		int size() const;
@@ -25,7 +25,7 @@ class Map {
 		bool get(const KeyType& key, ValueType& value) const;
 		bool get(int i, KeyType& key, ValueType& value) const;
 		void swap(Map& other);
-		void dump();
+		void dump() const;
 	private:
 		struct KVPair {
 			KeyType k;
