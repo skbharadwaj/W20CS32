@@ -2,9 +2,11 @@
 #include <string>
 #include <cstdlib>
 #include "Map.h"
+
 // method declaration for combine and reassign
 bool combine(const Map& m1, const Map& m2, Map& result);
 void reassign(const Map& m, Map& result);
+
 // default constructor setting size = 0 and head to a null pointer
 Map::Map() {
 	m_s = 0;
@@ -201,32 +203,18 @@ void Map::swap(Map& other) {
 void Map::dump() const {
 	Node* temp = head;
 	while(temp != nullptr) {
-		cout << temp->pair.k << " " << temp->pair.v << endl;
+		cerr << temp->pair.k << " " << temp->pair.v << endl;
 		temp = temp->next;
 	}
 }
-int main() { /*
-	Map m;
-	m.insert("manish", 4.0);
-	m.insert("amara", 10.0);
-	m.insert("lordan", 5.0);
-	m.insert("krishnan", 2.0);
-	m.insertOrUpdate("baldwins", 2.0);
-	Map f;
-	f.insert("Fred", 123);
-	f.insert("Ethel", 456);
-	f.insert("Lucy", 789);
-	f.insert("Ricky", 321);
-	m = f;
-	m.dump();
-	cout << endl; */
-}
+
 /* combines the maps m1 and m2 according to the following specifications:
 If a key appears in exactly one of m1 and m2, then result must contain a 
 pair consisting of that key and its corresponding value.
 If a key appears in both m1 and m2, with the same corresponding value in 
 both, then result must contain exactly one pair with that key and value. */
 bool combine(const Map& m1, const Map& m2, Map& result) {
+
 	Map x; // creates temporary map to protect against aliasing
 	bool sameDiffVal = true; // keeps track of same key, different value pairs 
 	// loops through the larger map and copies over nodes according to the spec
@@ -252,6 +240,7 @@ bool combine(const Map& m1, const Map& m2, Map& result) {
 	// exchange x with result. x is deleted after the method ends
 	x.swap(result);	
 	return sameDiffVal;
+
 }
 // mixes up the key and value pairs in m and puts them 
 // in result, such that no key-value pair is the same as 
