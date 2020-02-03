@@ -2,6 +2,6 @@
 
 Projects and homeworks for CS 32 taken at UCLA in Winter 2020. Author: Shreyas Bharadwaj, ID: 705342716.
 
-Project 1: 95/100
+Project 1: 95/100 \n
 Homework 1: 97/100
 Midterm 1: 32/35
