@@ -73,15 +73,12 @@ int returnValue(const Map& m, string infix) {
 	for(int i = 0;i < infix.size();i++)	
 		if(first == infix[i]) { indexFirst = i; break; }
 	char second = closest(infix, indexFirst, true);
-
 	if(isOperator(first) || first == ')' || (second == '(' && operand(first)) || second == ')') return 1;
+
 	for(int i = 1;i < infix.size();i++) {
 		char ch = infix[i];
-		cout << ch;
 		char before = closest(infix, i, false);
-		cout << " " << before;
 		char after = closest(infix, i, true);
-		cout << " " << after << endl;
 		if(operand(ch)) {
 			if(operand(before) || operand(after)) return 1;
 			else if(before == ')' || after == '(') return 1;
@@ -123,8 +120,20 @@ int evaluate(string infix, const Map& values, string& postfix, int& result) {
 	toPostFix(infix, postfix);
 	stack<int> operands; 
 	int rv = returnValue(values, infix);
-
 	if(rv == 1 || rv == 2) return rv;
+
+	int counter = 0;	
+	for(int i = 0;i < postfix.size();i++) {
+		if(operand(postfix[i])) counter++;
+		else if(isOperator(postfix[i])) {
+			counter -= 2;
+			if(counter < 0) return 1;
+			counter++;
+		}
+	}
+	if(counter != 1) return 1;
+
+
     for(int i = 0;i < postfix.size();i++) {
         int op1;
         int op2;
@@ -152,7 +161,6 @@ int evaluate(string infix, const Map& values, string& postfix, int& result) {
         }
     }
     result = operands.top();
-	cout << result << endl;
 	if(operands.size() != 1) return 1;
 	return 0;
 }
