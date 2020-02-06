@@ -6,4 +6,4 @@ Project 1: 95/100
 
 Homework 1: 97/100
 
-Midterm 1: 32/35
+Homework 2: 92/100
