@@ -16,55 +16,50 @@ int valueInMapAt(const Map& m, char key);
 int returnValue(const Map& m, string infix);
 char closest(string infix, int i, bool which);
 
-int main () {
-            char vars[] = { 'a', 'e', 'i', 'o', 'u', 'y', '#' };
-            int  vals[] = {  3,  -9,   6,   2,   4,   1  };
-            Map m;
-            for (int k = 0; vars[k] != '#'; k++)
-                m.insert(vars[k], vals[k]);
-            string pf;
-            int answer;
-            assert(evaluate("a+ e", m, pf, answer) == 0  &&
-                                    pf == "ae+"  &&  answer == -6);
-            answer = 999;
-            assert(evaluate("", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("a+", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("a i", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("ai", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("()", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("()o", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("y(o+u)", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("y(*o)", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("a+E", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("(a+(i-o)", m, pf, answer) == 1  &&  answer == 999);
-              // unary operators not allowed:
-            assert(evaluate("-a", m, pf, answer) == 1  &&  answer == 999);
-            assert(evaluate("a*b", m, pf, answer) == 2  &&
-                                    pf == "ab*"  &&  answer == 999);
-            assert(evaluate("y +o *(   a-u)  ", m, pf, answer) == 0  &&
-                                    pf == "yoau-*+"  &&  answer == -1);
-            answer = 999;
-            assert(evaluate("o/(y-y)", m, pf, answer) == 3  &&
-                                    pf == "oyy-/"  &&  answer == 999);
-            assert(evaluate(" a  ", m, pf, answer) == 0  &&
-                                    pf == "a"  &&  answer == 3);
-            assert(evaluate("((a))", m, pf, answer) == 0  &&
-                                    pf == "a"  &&  answer == 3);
-            cout << "Passed all tests" << endl;
-}
-
 int returnValue(const Map& m, string infix) {
-	for(int i = 0;i < infix.size();i++) {
-		if((int)(infix[i]) >= 65 && (int)(infix[i]) <= 90) return 1;
-	}
+	if(infix.size() == 0) return 1;
 	int open = 0;
 	int close = 0;
+
 	for(int i = 0;i < infix.size();i++) {
 		if(infix[i] == '(') open++;
 		if(infix[i] == ')') close++;
 	}
+	if(open != close) cout << "HERE" << endl;
 	if(open != close) return 1;
-	if(infix.size() == 0) return 1;
+	string parens = "";
+	for(int i = 0;i < infix.size();i++) {
+		char ch = infix[i];
+		switch (ch) {
+			case '[':
+			case '(':
+			case '{':
+			case ']':
+			case ')':
+			case '}':
+				parens += ch;
+			default: continue;
+		}
+	}
+	stack<char> paren;
+	cout << parens << endl;
+	if(parens.size() != 0) {
+		for(int i = 0;i < parens.size();i++) {
+			if(parens[i] == '(' || parens[i] == '[' || parens[i] == '{') paren.push(parens[i]);
+			else if(paren.empty()) return 1;
+			else {
+				char top = paren.top();
+				if(parens[i] == ')' && top == '(') paren.pop();
+				else if(parens[i] == ']' && top == '[') paren.pop();
+				else if(parens[i] == '}' && top == '{') paren.pop();
+				else return 1;
+			}
+		}
+	}	
+	for(int i = 0;i < infix.size();i++) {
+		if((int)(infix[i]) >= 65 && (int)(infix[i]) <= 90) return 1;
+	}
+
 	for(int i = 0;i < infix.size();i++) 
 		if(operand(infix[i]) && !m.contains(infix[i])) return 2;
 	if(infix.size() == 1 && !operand(infix[0])) return 1;
@@ -96,7 +91,9 @@ int returnValue(const Map& m, string infix) {
 
 	if(isOperator(end) || end == '(') return 1;
 	if((secondLast == ')' && operand(end)) || secondLast == '(') return 1;
-	if(end == '(') return 1;
+	if(end == '(' || (end == ')' && isOperator(secondLast))) cout << "HELLO1";
+	cout << secondLast << " " << end << endl;
+	cout << "here??" << endl;
 	return 0;
 }
 
@@ -105,7 +102,7 @@ char closest(string infix, int i, bool which) {
 		for(int j = i+1;j < infix.size();j++) if(infix[j] != ' ') return infix[j];
 	}
 	else { 
-		for(int j = i-1;j > - 1;j--) if(infix[j] != ' ') return infix[j];
+		for(int j = i-1;j >= 0;j--) if(infix[j] != ' ') return infix[j];
 	}
 	return '$';
 }
@@ -117,11 +114,12 @@ int valueInMapAt(const Map& m, char key) {
 }
 
 int evaluate(string infix, const Map& values, string& postfix, int& result) {
+	
 	toPostFix(infix, postfix);
+	cout << postfix;
 	stack<int> operands; 
 	int rv = returnValue(values, infix);
 	if(rv == 1 || rv == 2) return rv;
-
 	int counter = 0;	
 	for(int i = 0;i < postfix.size();i++) {
 		if(operand(postfix[i])) counter++;
@@ -173,23 +171,23 @@ void toPostFix(string infix, string& postfix) {
 		if(operand(c)) postfix += c;
 		else if(c == '(') operators.push(c);
 		else if(c == ')') {
-			while(operators.top() != '(') {
+			while(!operators.empty() && operators.top() != '(') {
 				postfix += operators.top();
-				operators.pop();
+				if(!operators.empty()) operators.pop();
 			}
-			operators.pop();
+			if(!operators.empty()) operators.pop();
 		}
 		else if(isOperator(c)) {
 			while(!operators.empty() && operators.top() != '(' && precedence(c, operators.top())) {
 				postfix += operators.top();
-				operators.pop();
+				if(!operators.empty()) operators.pop();
 			}
 			operators.push(c);
 		}
 	}
 	while(!operators.empty()) {
 		postfix += operators.top();
-		operators.pop();
+		if(!operators.empty()) operators.pop();
 	}
 }
 
@@ -206,7 +204,43 @@ bool precedence(char op1, char op2) {
 	return (op1 == op2) || (op1 == '+') || (op1 == '-') || (op1 == '*' && op2 == '/') || (op1 == '/' && op1 == '*');
 }
 
-
+       int main()
+        {
+            char vars[] = { 'a', 'e', 'i', 'o', 'u', 'y', '#' };
+            int  vals[] = {  3,  -9,   6,   2,   4,   1  };
+            Map m;
+            for (int k = 0; vars[k] != '#'; k++)
+                m.insert(vars[k], vals[k]);
+            string pf;
+            int answer;
+            assert(evaluate("a+ e", m, pf, answer) == 0  &&
+                                    pf == "ae+"  &&  answer == -6);
+            answer = 999;
+            assert(evaluate("", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("a+)", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("a i", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("ai)", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("()", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("()o)", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("y(o+u)", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("y(*o)", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("a+E", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("(a+(i-o)", m, pf, answer) == 1  &&  answer == 999);
+              // unary operators not allowed:
+            assert(evaluate("-a", m, pf, answer) == 1  &&  answer == 999);
+            assert(evaluate("a*b", m, pf, answer) == 2  &&
+                                    pf == "ab*"  &&  answer == 999);
+            assert(evaluate("y +o *(   a-u)  ", m, pf, answer) == 0  &&
+                                    pf == "yoau-*+"  &&  answer == -1);
+            answer = 999;
+            assert(evaluate("o/(y-y)", m, pf, answer) == 3  &&
+                                    pf == "oyy-/"  &&  answer == 999);
+            assert(evaluate(" a  ", m, pf, answer) == 0  &&
+                                    pf == "a"  &&  answer == 3);
+            assert(evaluate("((a))", m, pf, answer) == 0  &&
+                                    pf == "a"  &&  answer == 3);
+            cout << "Passed all tests" << endl;
+        }
 
 
 

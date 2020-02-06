@@ -16,25 +16,6 @@ class Coord	{
         int m_c;
 };
 
-int main () {
-            string maze[10] = {
-                "XXXXXXXXXX",
-                "X...X..X.X",
-                "X.XXX....X",
-                "X.X.XXXX.X",
-                "XXX......X",
-                "X...X.XX.X",
-                "X.X.X..X.X",
-                "X.XXXX.X.X",
-                "X..X...X.X",
-                "XXXXXXXXXX"
-            };
-        
-            if (pathExists(maze, 10,10, 4,3, 1,8))
-                cout << "Solvable!" << endl;
-            else
-                cout << "Out of luck!" << endl;
-}
 
 bool pathExists(string maze[], int nRows, int nCols, int sr, int sc, int er, int ec) {
 	stack<Coord> coords;
@@ -63,7 +44,7 @@ bool pathExists(string maze[], int nRows, int nCols, int sr, int sc, int er, int
             }
         }
 	}
-	return true;
+	return false;
 }
 
 
