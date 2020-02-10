@@ -7,3 +7,5 @@ Project 1: 95/100
 Homework 1: 97/100
 
 Project 2: 92/100
+
+Homework 2: 98/100
