@@ -45,7 +45,7 @@ void display(const Event* e)
 {
     cout << e->name() << ": ";
     if (e->isSport())
-	cout << "(sport) ";
+	    cout << "(sport) ";
     cout << "needs " << e->need() << endl;
 }
 
