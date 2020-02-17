@@ -27,7 +27,7 @@ int StudentWorld::init()
         int locY = randInt(0, VIEW_HEIGHT);
         while(sqrt((locX - VIEW_WIDTH/2)*(locX - VIEW_WIDTH/2) + (locY - VIEW_HEIGHT/2)*(locY - VIEW_HEIGHT/2)) > 120) 
             locY = randInt(0, VIEW_WIDTH);
-        insertDirt(locX, locY);
+        addDirt(locX, locY);
     } 
     return GWSTATUS_CONTINUE_GAME;
 }
