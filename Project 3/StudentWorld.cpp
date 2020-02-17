@@ -26,7 +26,7 @@ int StudentWorld::init()
         int locX = randInt(0, VIEW_WIDTH);
         int locY = randInt(0, VIEW_HEIGHT);
         while(sqrt((locX - VIEW_WIDTH/2)*(locX - VIEW_WIDTH/2) + (locY - VIEW_HEIGHT/2)*(locY - VIEW_HEIGHT/2)) > 120) 
-            locY = randInt(0, VIEW_WIDTH);
+            locY = randInt(0, VIEW_HEIGHT);
         addDirt(locX, locY);
     } 
     return GWSTATUS_CONTINUE_GAME;
@@ -42,6 +42,7 @@ int StudentWorld::move()
         *p->doSomething();
     }
     if(!soc.isAlive()) return GWSTATUS_PLAYER_DIED;
+    return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::cleanUp()
