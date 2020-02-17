@@ -1,7 +1,7 @@
 #include "Actor.h"
 #include "StudentWorld.h"
 #include "GameConstants.h"
-
+using namespace std;
 class StudentWorld;
 // Students:  Add code to this file, Actor.h, StudentWorld.h, and StudentWorld.cpp
 
