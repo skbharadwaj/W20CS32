@@ -3,6 +3,7 @@
 #include "GraphObject.h"
 #include "StudentWorld.h"
 class StudentWorld;
+using namespace std;
 // Students:  Add code to this file, Actor.cpp, StudentWorld.h, and StudentWorld.cpp
 class Actor: public GraphObject {
     public:
