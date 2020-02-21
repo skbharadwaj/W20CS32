@@ -11,6 +11,12 @@ class Actor: public GraphObject {
        virtual bool isHPActor() { return false; }
        virtual bool isSocrates() { return false; }
        virtual bool isDirt() { return false; }
+       virtual bool isFood() { return false; }
+       virtual bool isPit() { return false; }
+       virtual bool isBacteria() { return false; }
+       virtual bool isSalmonella() { return false; }
+       virtual bool isAggressiveSalmonella() { return false; }
+       virtual bool isEColi() { return false; }
        StudentWorld* getSW() const { return world; }
        bool isAlive() const { return aliveStatus; }
        static void polarToRect(int radius, Direction d, int& x, int& y);
@@ -19,7 +25,27 @@ class Actor: public GraphObject {
        StudentWorld* world;
        bool aliveStatus;
 };
+class BacteriaPit: public Actor {
+public:
+    BacteriaPit(double sX, double sY, StudentWorld* sWorld);
+    void doSomething();
+    bool isPit() { return true; }
+    int getRegSalmonella() { return bacteria[0]; }
+    int getAggSalmonella() { return bacteria[1]; }
+    int getEColi() { return bacteria[2]; }
+    void decBacteria(int a);
+    virtual ~BacteriaPit(){};
+private:
+    int bacteria[3];
+};
 
+class Food: public Actor {
+public:
+    Food(double sX, double sY, StudentWorld* sWorld);
+    void doSomething() { return; }
+    bool isFood() { return true; }
+    virtual ~Food(){}
+};
 
 class Dirt: public Actor {
     public:
@@ -39,10 +65,40 @@ class HPActor: public Actor {
        void gainHP(int x) { hp += x; }
        void setHP(int x) { hp = x; }
        int getHP() { return hp; }
+       int getMovementPlanDistance() { return movement_plan_distance; }
+       void setMovementPlanDistance(int a) { movement_plan_distance = a; }
        virtual ~HPActor() {}
    private:
-       int hp;
+       int hp, movement_plan_distance;
 };
+class Salmonella: public HPActor {
+public:
+    Salmonella(double sX, double sY, StudentWorld* sWorld);
+    void doSomething();
+    bool isBacteria() { return true; }
+    bool isSalmonella() { return true; }
+    virtual ~Salmonella() {}
+};
+
+class AggressiveSalmonella: public HPActor {
+public:
+    AggressiveSalmonella(double sX, double sY, StudentWorld* sWorld);
+    void doSomething();
+    bool isBacteria() { return true; }
+    bool isAggressiveSalmonella() { return true; }
+    virtual ~AggressiveSalmonella() {}
+};
+
+class EColi: public HPActor {
+public:
+    EColi(double sX, double sY, StudentWorld* sWorld);
+    void doSomething();
+    bool isBacteria() { return true; }
+    bool isEColi() { return true; }
+    virtual ~EColi() {}
+};
+
+
 class Socrates: public HPActor {
     public:
         Socrates(StudentWorld* sWorld);

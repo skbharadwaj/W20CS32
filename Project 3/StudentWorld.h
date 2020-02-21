@@ -18,6 +18,8 @@ public:
     virtual void cleanUp();
     void addActor(Actor* a);
     virtual ~StudentWorld();
+    bool overlap(int x, int y);
+
 private:
    list<Actor*> actors;
    Socrates* player;
