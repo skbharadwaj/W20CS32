@@ -10,6 +10,7 @@ using namespace std;
 // Students:  Add code to this file, StudentWorld.cpp, Actor.h, and Actor.cpp
 class Actor;
 class Socrates;
+class DamagingObject;
 class StudentWorld : public GameWorld {
 public:
     StudentWorld(std::string assetPath);
@@ -19,7 +20,7 @@ public:
     void addActor(Actor* a);
     virtual ~StudentWorld();
     bool overlap(int x, int y);
-
+    void flameAllDamageAbleObjects(DamagingObject* actor);
 private:
    list<Actor*> actors;
    Socrates* player;

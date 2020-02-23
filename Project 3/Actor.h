@@ -13,10 +13,16 @@ class Actor: public GraphObject {
        virtual bool isDirt() { return false; }
        virtual bool isFood() { return false; }
        virtual bool isPit() { return false; }
+       virtual bool isFlame() { return false;  }
        virtual bool isBacteria() { return false; }
        virtual bool isSalmonella() { return false; }
        virtual bool isAggressiveSalmonella() { return false; }
+       virtual bool isDamageableObject() { return false; }
+       virtual bool isBlockingObject() { return false; }
        virtual bool isEColi() { return false; }
+       virtual void gainHP(int x) {}
+       virtual void setHP(int x) {}
+       virtual int getHP() { return 0 ;}
        StudentWorld* getSW() const { return world; }
        bool isAlive() const { return aliveStatus; }
        static void polarToRect(int radius, Direction d, int& x, int& y);
@@ -39,6 +45,34 @@ private:
     int bacteria[3];
 };
 
+class DamagingObject: public Actor {
+public:
+    DamagingObject(int imageID, double sX, double sY, Direction dir, int depth,
+    StudentWorld* sWorld);
+    int getTravelDistance() { return max_travel_distance; }
+    void setTravelDistance(int x) { max_travel_distance = x; }
+    virtual bool isSpray() { return false; }
+    virtual bool isFlame() { return false; }
+    void doSomething();
+    virtual ~DamagingObject() {}
+private:
+    int max_travel_distance;
+};
+
+class Flame: public DamagingObject {
+public:
+    Flame(double sX, double sY, Direction dir, StudentWorld* sWorld);
+    bool isFlame() { return true; }
+    virtual ~Flame() {}
+};
+
+class Spray: public DamagingObject {
+public:
+    Spray(double sX, double sY, Direction dir, StudentWorld* sWorld);
+    bool isSpray() { return true; }
+    virtual ~Spray() {}
+};
+
 class Food: public Actor {
 public:
     Food(double sX, double sY, StudentWorld* sWorld);
@@ -52,6 +86,7 @@ class Dirt: public Actor {
         Dirt(double sX, double sY, StudentWorld* sWorld);
         void doSomething() { return; }
         bool isDirt() { return true; }
+        bool isDamageableObject() { return true; }
         virtual ~Dirt() {}
 };
 
@@ -67,6 +102,7 @@ class HPActor: public Actor {
        int getHP() { return hp; }
        int getMovementPlanDistance() { return movement_plan_distance; }
        void setMovementPlanDistance(int a) { movement_plan_distance = a; }
+       bool isDamageableObject() { return true; }
        virtual ~HPActor() {}
    private:
        int hp, movement_plan_distance;
@@ -113,3 +149,4 @@ class Socrates: public HPActor {
         int spray, flame;
 };
 #endif // ACTOR_H_
+

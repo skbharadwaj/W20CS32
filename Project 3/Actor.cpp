@@ -57,12 +57,13 @@ void EColi::doSomething() {
 
 Socrates::Socrates(StudentWorld* sWorld)
 : HPActor(IID_PLAYER, 0, VIEW_WIDTH/2, 0, 0, sWorld), spray(20), flame(5) {}
+
 void Socrates::doSomething() {
    if(!isAlive()) return;
    int ch;
    if (getSW()->getKey(ch)) {
       switch(ch) {
-          case KEY_PRESS_UP: {
+
           case KEY_PRESS_LEFT: {
               int x = getX();
               int y = getY();
@@ -71,7 +72,7 @@ void Socrates::doSomething() {
               setDirection(getDirection() + 5);
               break;
           }
-          }
+          
           case KEY_PRESS_DOWN: {
           case KEY_PRESS_RIGHT: {
               int x = getX();
@@ -106,20 +107,42 @@ void BacteriaPit::doSomething() {
     if(randInt(1, 50) == 1) {
         int whichBac = randInt(0, 2);
         while(bacteria[whichBac] == 0) whichBac = randInt(0, 2);
-        Actor* newBac;
+        Actor* newBac = nullptr;
         switch(whichBac) {
             case 0:
-                newBac = new Salmonella(getX(), getX(), getSW());
+                newBac = new Salmonella(getX(), getY(), getSW());
                 break;
             case 1:
-                newBac = new AggressiveSalmonella(getX(), getX(), getSW());
+                newBac = new AggressiveSalmonella(getX(), getY(), getSW());
             case 2:
-                newBac = new EColi(getX(), getX(), getSW());
-            default: newBac = new Salmonella(getX(), getX(), getSW());
+                newBac = new EColi(getX(), getY(), getSW());
         }
         getSW()->addActor(newBac);
         decBacteria(whichBac);
         getSW()->playSound(SOUND_BACTERIUM_BORN);
     }
 
+}
+
+DamagingObject::DamagingObject(int imageID, double sX, double sY, Direction dir, int depth, StudentWorld* sWorld)
+: Actor(imageID, sX, sY, dir, depth, sWorld) {}
+
+
+Flame::Flame(double sX, double sY, Direction dir, StudentWorld* sWorld)
+: DamagingObject(IID_FLAME, sX, sY, dir, 1, sWorld) {
+    setTravelDistance(32);
+}
+
+Spray::Spray(double sX, double sY, Direction dir, StudentWorld* sWorld)
+: DamagingObject(IID_SPRAY, sX, sY, dir, 1, sWorld) {
+    setTravelDistance(112);
+}
+
+void DamagingObject::doSomething() {
+    if(!isAlive()) return;
+    getSW()->flameAllDamageAbleObjects(this);
+    moveAngle(getDirection(), SPRITE_WIDTH);
+    setTravelDistance(getTravelDistance() - SPRITE_WIDTH);
+    if(getTravelDistance() == 0) die();
+    return;
 }
