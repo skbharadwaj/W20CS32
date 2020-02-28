@@ -9,7 +9,6 @@ class Actor: public GraphObject {
        virtual void doSomething() = 0;
        virtual void die() { aliveStatus = false; }
        virtual bool isHPActor() { return false; }
-       virtual bool isSocrates() { return false; }
        virtual bool isDirt() { return false; }
        virtual bool isFood() { return false; }
        virtual bool isPit() { return false; }
@@ -144,7 +143,6 @@ class HPActor: public Actor {
                StudentWorld* sWorld);
        void loseHP(int x) { hp -= x; }
        bool isHPActor() { return true; }
-       virtual void doSomething() = 0;
        void gainHP(int x) { hp += x; }
        void setHP(int x) { hp = x; }
        int getHP() { return hp; }

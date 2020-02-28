@@ -36,6 +36,7 @@ public:
     bool isOutOfBounds(double x, double y);
     bool checkIfOverlapAndRemove(DamagingObject* damaging);
     void addFoodHere(int x, int y);
+    void lookForClosestFood(Salmonella* salmonella);
     void addFlameCharges();
 private:
    list<Actor*> actors;

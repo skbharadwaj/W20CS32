@@ -155,7 +155,7 @@ void StudentWorld::addActor(Actor *a) {
 void StudentWorld::flameAllDamageAbleObjects(DamagingObject* flame) {
     for(list<Actor*>::iterator p = actors.begin();p != actors.end();p++) {
         Actor* curr = *p;
-        if(!curr->isFlame() && curr != flame) {
+        if(!curr->isFlame() && curr != flame && !curr->isFood()) {
             int distX = flame->getX() - curr->getX();
             int distY = flame->getY() - curr->getY();
             if(distX*distX + distY*distY <= (SPRITE_WIDTH*SPRITE_WIDTH/4)) {
@@ -181,6 +181,7 @@ void StudentWorld::flameAllDamageAbleObjects(DamagingObject* flame) {
                         if(curr->getHP() > 0) playSound(SOUND_SALMONELLA_HURT);
                         else {
                             playSound(SOUND_SALMONELLA_DIE);
+                            curr->die();
                             increaseScore(100);
                         }
                     }
@@ -188,6 +189,7 @@ void StudentWorld::flameAllDamageAbleObjects(DamagingObject* flame) {
                         if(curr->getHP() > 0) playSound(SOUND_ECOLI_HURT);
                         else{
                             playSound(SOUND_ECOLI_DIE);
+                            curr->die();
                             increaseScore(100);
                         }
                     }
@@ -271,7 +273,7 @@ void StudentWorld::eColiMove(EColi* ecoli) {
                 Actor* food = *p;
                 int foodX = food->getX(), foodY = food->getY();
                 int dx = currX - foodX, dy = currY - foodY;
-                if(dx*dx + dy*dy <= SPRITE_WIDTH*SPRITE_WIDTH/4) {
+                if(dx*dx + dy*dy <= SPRITE_WIDTH*SPRITE_WIDTH) {
                     ecoli->setFoodEaten(ecoli->getFoodEaten()+1);
                     food->die();
                     break;
@@ -376,8 +378,8 @@ void StudentWorld::salmonellaMove(Salmonella *salmonella) {
     for(p = actors.begin();p != actors.end();p++) {
         Actor *temp = *p;
         if(temp->isFood()) {
-            int dx = temp->getX() - playerX;
-            int dy = temp->getY() - playerY;
+            int dx = temp->getX() - salmonella->getX();
+            int dy = temp->getY() - salmonella->getY();
             int dist = dx*dx + dy*dy;
             if(dist <= 128*128) {
                 isThereFood = true;
@@ -394,7 +396,8 @@ void StudentWorld::salmonellaMove(Salmonella *salmonella) {
         salmonella->setMovementPlanDistance(10);
         return;
     }
-    double dx = closestFoodX - playerX, dy = closestFoodY - playerY;
+    int dx = closestFoodX - salmonella->getX();
+    int dy = closestFoodY - salmonella->getY();
     int socAngle;
     if(dx > 0 && dy >= 0) { // correct
         socAngle = 180 + ((int)((atan(dy/dx))*(180/M_PI)));
@@ -411,7 +414,7 @@ void StudentWorld::salmonellaMove(Salmonella *salmonella) {
 
     double newX, newY;
     salmonella->getPositionInThisDirection(socAngle, 3, newX, newY);
-    if(!checkIfDirtNearby(newX, newY)) {
+    if(!checkIfDirtNearby(newX, newY) && !isOutOfBounds(newX, newY)) {
         salmonella->moveAngle(socAngle, 3);
         return;
     }
@@ -444,14 +447,15 @@ void StudentWorld::aggressiveSalmonellaMove(AggressiveSalmonella *salmonella) {
         else if(dx < 0 && dy >= 0) { // correct
             socAngle = (int)((atan(dy/dx))*(180/M_PI));
         }
-        else if(dx < 0 && dy <= 0) { // correct
+        else if(dx < 0 && dy < 0) { // correct
             socAngle = ((int)((atan(dy/dx))*(180/M_PI)));
         }
-        double newX, newY;
-        salmonella->getPositionInThisDirection(socAngle, 2, newX, newY);
-        if(!checkIfDirtNearby(newX, newY)) {
-            salmonella->moveAngle(socAngle, 3);
-        }
+        else socAngle = 0;
+        salmonella->setDirection(socAngle);
+        int newX = (int)(3*cos(salmonella->getDirection())) + currX;
+        int newY = (int)(3*sin(salmonella->getDirection())) + currY;
+        if(!checkIfDirtNearby(newX, newY))
+            salmonella->moveAngle(salmonella->getDirection(), 3);
     }
 
     if(overlapsWithSocrates(salmonella)) {
@@ -483,7 +487,7 @@ void StudentWorld::aggressiveSalmonellaMove(AggressiveSalmonella *salmonella) {
                 Actor* food = *p;
                 int foodX = food->getX(), foodY = food->getY();
                 int dx = currX - foodX, dy = currY - foodY;
-                if(dx*dx + dy*dy <= SPRITE_WIDTH*SPRITE_WIDTH/4) {
+                if(dx*dx + dy*dy <= SPRITE_WIDTH*SPRITE_WIDTH) {
                     salmonella->setFoodEaten(salmonella->getFoodEaten()+1);
                     food->die();
                     break;
@@ -513,8 +517,8 @@ void StudentWorld::aggressiveSalmonellaMove(AggressiveSalmonella *salmonella) {
     for(p = actors.begin();p != actors.end();p++) {
         Actor *temp = *p;
         if(temp->isFood()) {
-            int dx = temp->getX() - playerX;
-            int dy = temp->getY() - playerY;
+            int dx = temp->getX() - salmonella->getX();
+            int dy = temp->getY() - salmonella->getY();
             int dist = dx*dx + dy*dy;
             if(dist <= 128*128) {
                 isThereFood = true;
@@ -526,13 +530,15 @@ void StudentWorld::aggressiveSalmonellaMove(AggressiveSalmonella *salmonella) {
             }
         }
     }
+
     if(!isThereFood) {
         salmonella->setDirection(randInt(0,359));
         salmonella->setMovementPlanDistance(10);
         return;
     }
-    dx = closestFoodX - playerX;
-    dy = closestFoodY - playerY;
+
+    dx = -(closestFoodX - salmonella->getX());
+    dy = -(closestFoodY - salmonella->getY());
     if(dx > 0 && dy >= 0) { // correct
         socAngle = 180 + ((int)((atan(dy/dx))*(180/M_PI)));
     }
@@ -546,9 +552,12 @@ void StudentWorld::aggressiveSalmonellaMove(AggressiveSalmonella *salmonella) {
         socAngle = ((int)((atan(dy/dx))*(180/M_PI)));
     }
 
+
+    else socAngle = 0;
     double newX, newY;
+    salmonella->setDirection(socAngle);
     salmonella->getPositionInThisDirection(socAngle, 3, newX, newY);
-    if(!checkIfDirtNearby(newX, newY)) {
+    if(!checkIfDirtNearby(newX, newY) && !isOutOfBounds(newX, newY)) {
         salmonella->moveAngle(socAngle, 3);
         return;
     }
