@@ -9,3 +9,6 @@ Homework 1: 97/100 (median: 97/100)
 Project 2: 92/100 (median: 97/100)
 
 Homework 2: 98/100 (median: 97/100)
+
+Midterm: 92/100 (median: 88/100, mean: 84/100)
+
