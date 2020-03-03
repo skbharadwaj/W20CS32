@@ -12,3 +12,4 @@ Homework 2: 98/100 (median: 97/100)
 
 Midterm: 92/100 (median: 88/100, mean: 84/100)
 
+Homework 3: 89/100 (median: 96/100)
