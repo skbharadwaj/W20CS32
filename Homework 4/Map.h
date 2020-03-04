@@ -3,10 +3,6 @@
 #ifndef MAP_INCLUDED
 #define MAP_INCLUDED
 
-using KeyType = int;
-using ValueType = double;
-
-
 template<typename KeyType, typename ValueType>
 class Map
 {
