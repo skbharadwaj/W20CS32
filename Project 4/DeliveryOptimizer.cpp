@@ -59,7 +59,7 @@ void DeliveryOptimizerImpl::optimizeDeliveryOrder(
             newCrowDistance += distanceEarthMiles(deliveries[i].location
                                                   , deliveries[i+1].location);
         }
-        newCrowDistance += 2*distanceEarthMiles(deliveries[deliveries.size() - 1].location
+        newCrowDistance += distanceEarthMiles(deliveries[deliveries.size() - 1].location
                                               , depot);
     }
 }
