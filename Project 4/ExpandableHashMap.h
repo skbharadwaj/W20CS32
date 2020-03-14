@@ -75,7 +75,9 @@ ExpandableHashMap<KeyType, ValueType>::ExpandableHashMap(double maximumLoadFacto
 template<typename KeyType, typename ValueType>
 ExpandableHashMap<KeyType, ValueType>::~ExpandableHashMap()
 {
-    for(int i = 0;i < numBuckets;i++) m_hashmap[i].clear();
+    for(int i = 0;i < numBuckets;i++)
+        for(typename list<HashNode*>::iterator p = m_hashmap[i].begin();
+            p != m_hashmap[i].end(); p++) delete *p;
     delete [] m_hashmap;
 }
 
@@ -83,7 +85,9 @@ ExpandableHashMap<KeyType, ValueType>::~ExpandableHashMap()
 template<typename KeyType, typename ValueType>
 void ExpandableHashMap<KeyType, ValueType>::reset()
 {
-    for(int i = 0;i < numBuckets;i++) m_hashmap[i].clear();
+    for(int i = 0;i < numBuckets;i++)
+        for(typename list<HashNode*>::iterator p = m_hashmap[i].begin();
+            p != m_hashmap[i].end(); p++) delete *p;
     numBuckets = 8;
     delete [] m_hashmap;
     m_hashmap = new list<HashNode*>[numBuckets];
@@ -128,11 +132,15 @@ void ExpandableHashMap<KeyType, ValueType>::associate(const KeyType& key, const 
             for(p = m_hashmap[i].begin();p != m_hashmap[i].end();p++) {
                 HashNode* currNode = *p;
                 int whichBucket = getBucketNumber(currNode->k);
-                newHashMap[whichBucket].push_back(currNode);
+                newHashMap[whichBucket].push_back(new HashNode(currNode->k,
+                                                               currNode->v));
             }
         }
+        for(int i = 0;i < numBuckets/2;i++)
+            for(typename list<HashNode*>::iterator p = m_hashmap[i].begin();
+                p != m_hashmap[i].end(); p++) delete *p;
+        delete [] m_hashmap;
         m_hashmap = newHashMap;
-
     }
 
 }
