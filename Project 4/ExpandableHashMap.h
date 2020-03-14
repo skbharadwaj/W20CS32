@@ -71,7 +71,7 @@ ExpandableHashMap<KeyType, ValueType>::ExpandableHashMap(double maximumLoadFacto
     m_hashmap = new list<HashNode*>[numBuckets];
 }
 
-// destructor that deletes the dynamically allocated storage 
+// destructor
 template<typename KeyType, typename ValueType>
 ExpandableHashMap<KeyType, ValueType>::~ExpandableHashMap()
 {
@@ -150,7 +150,6 @@ const ValueType* ExpandableHashMap<KeyType, ValueType>::find(const KeyType& key)
     }
     return nullptr;
 }
-
 
 #endif
 
